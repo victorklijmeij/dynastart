@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+    <link rel="canonical" href="https://getbootstrap.com/docs/3.4/examples/dashboard/">
+
+    <title>DynaStart</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <script src="jquery-3.6.0.min.js"></script>
+    <script src="holder.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <script src="bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="yaml.js"></script>
+    <link rel="stylesheet" href="dynastart.css">
+
+  </head>
+
+  <body>
+    <!-- Image and text -->
+    <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="#">
+        <img src="/docs/4.0/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+        DynaStart
+      </a>
+    </nav>
+    <div class=".container-fluid">
+    <div class="row justify-content-center">
+        <input type="text" class="txtInput" id="searchTheKey" placeholder="Enter the keywords to search.....">
+    </div>
+    <div class="box_content">
+        <ol class="rounded-list">
+            <li>
+                <ol id="searchresults">
+
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <div class=".container-fluid">
+    <div class="row justify-content-center">
+          <ul id="hyperlinks" class=".list-unstyled">
+    </div>
+
+    <div class=".container-fluid">
+    <div class="row justify-content-center">
+      <textarea id="source">---
+- name: loadbalancer frontend
+  url: /
+  tags:
+    - infra
+- name: vcenter 
+  url: /
+  tags:
+    - infra
+    - vmware
+- name: Home assistant
+  url: /
+  tags:
+    - infra
+- name: Stackoverflow
+  url: https://stackoverflow.com/
+  tags:
+    - coding
+- name: pihole
+  url: /
+  tags:
+    - dns
+    - infra
+- name: loadbalancer backend
+  url: /
+  tags:
+    - infra
+- name: GitHub
+  url: https://github.com/
+  tags:
+    - code
+- name: bbbootstrap
+  url: https://bbbootstrap.com/
+  tags:
+    - code
+- name: Hacker News
+  url: https://news.ycombinator.com/
+  tags:
+    - news
+    - tech
+     </textarea>
+    </div>
+    </div>
+    <script>
+      yamlString="";
+      nativeObject = YAML.parse($("#source").val());
+      console.log(nativeObject);
+      console.log($("#source").val());
+    </script>
+    <script>
+      $("#searchTheKey").on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        console.log("search for "+value)
+        for (idx = 0; idx < nativeObject.length; idx++) {
+          if (nativeObject[idx].name.toLowerCase().search(value) > -1) {
+            if($("#linkid" + idx).length == 0) {
+            console.log("<a href=\""+nativeObject[idx].url+"\">"+nativeObject[idx].name+"\"</a>");
+            $("#searchresults").append("<li id=linkid"+idx+""+"><a href=\""+nativeObject[idx].url+"\">"+nativeObject[idx].name+"</a></li>");
+            } else {
+              console.log("#linkid"+idx+" exsists");
+            }
+          } else {
+            console.log("remove #searchresults #linkid"+idx);
+            $("#searchresults #linkid"+idx).remove();
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
