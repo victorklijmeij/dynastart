@@ -1,19 +1,32 @@
 document.addEventListener("DOMContentLoaded", function(){
     console.log("page load");
     yamlString="";
+    // const alltags = new Set()
     // nativeObject = YAML.parse($("#source").val());
     nativeObject=YAML.parse(dynacontent);
     console.log(nativeObject);
     dyna_searchvalue="";
     contenttag=window.location.hash.substr(1);
     dynastart_search_and_update(contenttag);
+    // get all unique tags
+    alltags = [];
+    for (idx = 0; idx < nativeObject.length; idx++) {
+        alltags = alltags.concat(nativeObject[idx].tags);
+    }
+    let uniqueTags = [...new Set(alltags)]
+    console.log(uniqueTags);
+    // create menu items
+    for(let key of uniqueTags) {
+        console.log(key)
+        $("#dynamenu").append(`<a class="nav-item nav-link" href="#news" onclick="dynastart_search_and_update("${key}");">${key}</a>`);
+    }
 });
 
 function dynastart_search_and_update(searchtag=contenttag) { 
     contenttag=searchtag;
     console.log("search for "+dyna_searchvalue+" with tag: "+contenttag);
     for (idx = 0; idx < nativeObject.length; idx++) {
-        if (nativeObject[idx].name.toLowerCase().search(dyna_searchvalue) > -1) {
+        if (nativeObject[idx].name.toLowerCase().search(dyna_searchvalue) > -1 ) {
             if ($.inArray(searchtag, nativeObject[idx].tags) != -1 || searchtag =='' ) {
                 console.log("tag "+searchtag+" in "+nativeObject[idx].tags);
                 if($("#linkid" + idx).length == 0) {

@@ -11,6 +11,8 @@ var dynacontent = ` ---
   url: /
   tags:
     - infra
+  keywords:
+    - vmware
 - name: vcenter 
   url: /
   tags:
