@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", function(){
     console.log("page load");
     yamlString="";
-    nativeObject = YAML.parse($("#source").val());
+    // nativeObject = YAML.parse($("#source").val());
+    nativeObject=YAML.parse(dynacontent);
     console.log(nativeObject);
     dyna_searchvalue="";
     contenttag=window.location.hash.substr(1);
