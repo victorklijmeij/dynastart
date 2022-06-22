@@ -27,24 +27,21 @@
 
   <body>
     <!-- Image and text -->
-    <nav class="navbar navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">
-        <img src="/docs/4.0/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">
-        DynaStart
-      </a>
-        <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-        <a class="nav-item nav-link" href="#news" onclick='dynastart_search_and_update();'>News</a>
-        <a class="nav-item nav-link" href="#infra" onclick='dynastart_search_and_update();'>Infra</a>
-        <a class="nav-item nav-link disabled" href="#">Disabled</a>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-        <a class="nav-item nav-link" href="#news" onclick='contenttag = "news";'>News</a>
-        <a class="nav-item nav-link" href="#infra" onclick='contenttag = "infra";'>Infra</a>
-        <a class="nav-item nav-link disabled" href="#">Disabled</a>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+          <a href="#" class="navbar-brand">DynaStart</a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+              <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="#" onclick='dynastart_search_and_update("");';>All <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="#news" onclick='dynastart_search_and_update("news");'>News</a>
+                <a class="nav-item nav-link" href="#infra" onclick='dynastart_search_and_update("infra");'>Infra</a>
+              </div>
+          </div>
       </div>
-    </div>
-    </nav>
+  </nav>
     <div class=".container-fluid">
     <div class="row justify-content-center">
     <p>Use the search box to quickly search for hyperlinks. </p>
@@ -102,6 +99,10 @@
   url: https://github.com/
   tags:
     - code
+- name: The Guardian
+  url: https://www.theguardian.com/international
+  tags:
+    - news
 - name: bbbootstrap
   url: https://bbbootstrap.com/
   tags:
