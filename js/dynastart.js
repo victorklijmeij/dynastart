@@ -15,10 +15,9 @@ document.addEventListener("DOMContentLoaded", function(){
     }
     let uniqueTags = [...new Set(alltags)]
     console.log(uniqueTags);
-    // create menu items
+    // create menu items from tags
     for(let key of uniqueTags) {
-        console.log(key)
-        $("#dynamenu").append(`<a class="nav-item nav-link" href="#news" onclick="dynastart_search_and_update("${key}");">${key}</a>`);
+        $("#dynamenu").append(`<a class="nav-item nav-link" href="#news" onclick='dynastart_search_and_update("${key}");'\>${key}</a>`);
     }
 });
 

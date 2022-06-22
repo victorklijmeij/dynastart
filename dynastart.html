@@ -13,16 +13,16 @@
     <title>DynaStart</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="bootstrap.min.css" rel="stylesheet">
-    <script src="jquery-3.6.0.min.js"></script>
-    <script src="fa-all.js"></script>
-    <script src="holder.min.js"></script>
-    <script src="bootstrap.min.js"></script>
-    <script src="bootstrap.bundle.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/fa-all.js"></script>
+    <script src="js/holder.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
     <script src="dynacontent.js"></script>
-    <script src="dynastart.js"></script>
-    <script type="text/javascript" src="yaml.js"></script>
-    <link rel="stylesheet" href="dynastart.css">
+    <script src="js/dynastart.js"></script>
+    <script type="text/javascript" src="js/yaml.js"></script>
+    <link rel="stylesheet" href="css/dynastart.css">
 
   </head>
 
@@ -37,21 +37,17 @@
           <div class="collapse navbar-collapse" id="navbarCollapse">
               <div class="navbar-nav" id="dynamenu">
                 <a class="nav-item nav-link active" href="#" onclick='dynastart_search_and_update("");';>All <span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link" href="#news" onclick='dynastart_search_and_update("news");'>News</a>
-                <a class="nav-item nav-link" href="#infra" onclick='dynastart_search_and_update("infra");'>Infra</a>
               </div>
           </div>
       </div>
   </nav>
     <div class=".container-fluid">
     <div class="row justify-content-center">
-    <p>Use the search box to quickly search for hyperlinks. </p>
-    <p>For example type h to find Hackernews</p>
     </div>
     </div>
     <div class=".container-fluid">
     <div class="row justify-content-center">
-        <input type="text" class="txtInput" id="searchTheKey" autofocus placeholder="Enter keywords">
+        <input type="text" class="txtInput" id="searchTheKey" autofocus placeholder="Enter keyword for search">
     </div>
     <div class="box_content">
         <ol class="rounded-list">
