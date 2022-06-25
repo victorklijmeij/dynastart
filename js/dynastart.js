@@ -21,6 +21,20 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 });
 
+//jQuery detect user pressing enter
+$(document).bind("keydown", function(e) {
+    if(e.which == 13 && e.ctrlKey){
+        console.log('Google search!');
+        window.open('https://www.google.com/search?q='+dyna_searchvalue, '_blank');
+    } else if (e.which == 68  && event.ctrlKey){
+        console.log('ducduckgo search!');
+        window.open('https://duckduckgo.com/search?q='+dyna_searchvalue, '_blank');
+    } else if (e.which == 13) {
+        console.log('User pressed Enter!');
+        window.open('https://duckduckgo.com/search?q='+dyna_searchvalue, '_blank');
+    }
+});
+
 function dynastart_search_and_update(searchtag=contenttag) { 
     contenttag=searchtag;
     console.log("search for "+dyna_searchvalue+" with tag: "+contenttag);
