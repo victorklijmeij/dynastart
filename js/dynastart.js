@@ -28,11 +28,15 @@ $(document).bind("keydown", function(e) {
         window.open('https://www.google.com/search?q='+dyna_searchvalue, '_blank');
     } else if (e.which == 68  && event.ctrlKey){
         console.log('ducduckgo search!');
-        window.open('https://duckduckgo.com/search?q='+dyna_searchvalue, '_blank');
+        window.open('https://duckduckgo.com/?q='+dyna_searchvalue, '_blank');
     } else if (e.which == 13) {
         console.log('User pressed Enter!');
-        window.open('https://duckduckgo.com/search?q='+dyna_searchvalue, '_blank');
+        window.open('https://duckduckgo.com/?q='+dyna_searchvalue, '_blank');
+    } else if (e.which == 82  && event.ctrlKey){
+        console.log('reddit search!');
+        window.open('https://reddit.com/search?q='+dyna_searchvalue, '_blank');
     }
+    // http://www.reddit.com/r/redditdev/search?q=
 });
 
 function dynastart_search_and_update(searchtag=contenttag) { 
