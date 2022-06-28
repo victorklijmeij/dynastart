@@ -11,13 +11,13 @@ document.addEventListener("DOMContentLoaded", function(){
     // get all unique tags
     alltags = [];
     for (idx = 0; idx < nativeObject.length; idx++) {
-        alltags = alltags.concat(nativeObject[idx].tags);
+        alltags = alltags.concat(nativeObject[idx].tags).sort();
     }
     let uniqueTags = [...new Set(alltags)]
     console.log(uniqueTags);
     // create menu items from tags
     for(let key of uniqueTags) {
-        $("#dynamenu").append(`<a class="nav-item nav-link" href="#news" onclick='dynastart_search_and_update("${key}");'\>${key}</a>`);
+        $("#dynamenu").append(`<a class="nav-item nav-link" href="#${key}" onclick='dynastart_search_and_update("${key}");'\>${key}</a>`);
     }
 });
 
