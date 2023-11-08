@@ -9,13 +9,13 @@ Edit hyperlinks.js to add new sites
 Edit meta.js to add new tags 
 
 ## Filter and search
-Tags are cut off at 6 characters to prevent overflow
+Tags are cut off at set number characters to prevent overflow
 Try to limit the number of tags to 20 and use fixedtags for an extra layer of filtering
 
 THe fixed tags are mandatory when selected, multiple fixed tag selections are treated as OR
 Selecting secondary tags is the same as an OR and creates a broader selection of links.
 
-The searchbox is used to search in the result of tag filters
+The searchbox is used to search freely in the result of the fixed tag filters
 
 ## Remarks
 - To many tags will add to many menu items. (no overflow yet)
