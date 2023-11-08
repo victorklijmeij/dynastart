@@ -1,40 +1,27 @@
 # dynastart
-Selfcontained startpage with dynamic search features
+A portable startpage with dynamic search features
+Designed to run from a local directory, batteries included for air gapped environments.
 
-Designed to run from local directory, batteries included for air gapped environments.
+Data is stored in js files as a workaround for cors errors when loading from filesystem
+https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors/CORSRequestNotHttp?utm_source=devtools&utm_medium=firefox-cors-errors&utm_campaign=default
 
-Edit dynacontent.js to add new sites
+Edit hyperlinks.js to add new sites
+Edit meta.js to add new tags 
 
-Add entries yaml formatted like
+## Filter and search
+Tags are cut off at 6 characters to prevent overflow
+Try to limit the number of tags to 20 and use fixedtags for an extra layer of filtering
 
-```yaml
-- name: loadbalancer frontend
-  url: /
-  tags:
-    - infra
-```
+THe fixed tags are mandatory when selected, multiple fixed tag selections are treated as OR
+Selecting secondary tags is the same as an OR and creates a broader selection of links.
 
+The searchbox is used to search in the result of tag filters
 
-Yaml is loaded and converted to entries and nav menu items based on tags.
-
-
-Remarks
+## Remarks
 - To many tags will add to many menu items. (no overflow yet)
 - No syntax check on the input file
 
-Todo:
+## Todo:
 Mention sources
 - Jquery
 - Bootstrap
-- free snippet for styled <li> elements from bootsnipp.com
-
-- Rework list to cards:
-The <li> is a starting point for a box/card layout.
-Would be nice to see how this works out.
-
-- Support endless nrof tags
-  maybe a tag carrousel?
-
-  <prev> TAGNAME <next>
-
-  

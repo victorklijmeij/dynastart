@@ -1,1 +1,223 @@
-.box_content{text-align: justify;max-width: 600px;width: 100%;margin: 20px auto;padding: 15px;background: #fff;color: #595959;-webkit-border-bottom-right-radius: 4px;-webkit-border-bottom-left-radius: 4px;-moz-border-radius-bottomright: 4px;-moz-border-radius-bottomleft: 4px;border-bottom-right-radius: 4px;border-bottom-left-radius: 4px}ol{counter-reset: li;list-style: none;font: 15px 'trebuchet MS', 'lucida sans';padding: 0;margin-bottom: 4em;text-shadow: 0 1px 0 rgba(255,255,255,.5);margin-left: -5px;margin-top: 0px;margin-bottom: 0px}ol ol{margin: 0 0 0 2em}.rounded-list a{position: relative;display: block;padding: .4em .4em .4em 2em;margin: .5em 0;background: #ddd;color: #444;text-decoration: none;-moz-border-radius: .3em;-webkit-border-radius: .3em;border-radius: .3em;-webkit-transition: all .3s ease-out;-moz-transition: all .3s ease-out;-ms-transition: all .3s ease-out;-o-transition: all .3s ease-out;transition: all .3s ease-out}.rounded-list a:before{content: counter(li);counter-increment: li;position: absolute;left: -1.3em;top: 50%;margin-top: -1.3em;background: #ffc923;height: 39px;width: 39px;line-height: 31px;border: .3em solid #fff;text-align: center;font-weight: bold;-moz-border-radius: 2em;-webkit-border-radius: 2em;border-radius: 2em;-webkit-transition: all .3s ease-out;-moz-transition: all .3s ease-out;-ms-transition: all .3s ease-out;-o-transition: all .3s ease-out;transition: all .3s ease-out}.rounded-list a:hover:before{-moz-transform: rotate(360deg);-webkit-transform: rotate(360deg);-moz-transform: rotate(360deg);-ms-transform: rotate(360deg);-o-transform: rotate(360deg);transform: rotate(360deg)}.rounded-list a:hover:before{background: #1da7e7;color: #fff}
+/* styles.css */
+
+/* Hide the scrollbar for the entire page */
+html,
+body {
+    overflow: hidden;
+    /* Hide scrollbars */
+    height: 100%;
+    /* Set the height to prevent unnecessary scrolling */
+}
+
+/* Style for the navbar background */
+.navbar {
+    background-color: black;
+    /* Set the background color to black */
+}
+
+.fixed-tags-bar {
+    background-color: #56aad4;
+    /* Light grey background */
+    padding-top: 0;
+    /* No padding on the top */
+    padding-bottom: 0.5rem;
+    /* Optional: Add some padding on the bottom for spacing */
+    margin: 0;
+    /* No margin */
+}
+
+/* Center the fixed tag menu items */
+#fixedTagMenu {
+    background-color: black;
+    /* Set the background color to black */
+    display: flex;
+    justify-content: center;
+    /* Center items horizontally */
+    padding-left: 0;
+    /* Remove default padding */
+    padding-right: 0;
+    /* Remove padding on the right */
+    margin-bottom: 0;
+    /* Remove default margin */
+    list-style: none;
+    /* Remove default list styling */
+    width: 100%;
+    /* Full width */
+}
+
+/* Center the fixed tag menu items */
+#tagMenu {
+    display: flex;
+    justify-content: center;
+    /* Center items horizontally */
+    padding-left: 0;
+    /* Remove default padding */
+    padding-right: 0;
+    /* Remove padding on the right */
+    margin-bottom: 0;
+    /* Remove default margin */
+    list-style: none;
+    /* Remove default list styling */
+    width: 100%;
+    /* Full width */
+}
+
+/* Style for the menu item text */
+.nav-link {
+    color: white;
+    /* Set the text color to white */
+    font-weight: bold;
+    /* Make the text bold */
+}
+
+/* Change the color for the menu item text on hover and focus */
+.nav-link:hover,
+.nav-link:focus {
+    color: #white;
+    /* Lighter shade of white for hover/focus */
+}
+
+/* Style for active nav links */
+.nav-link.active {
+    color: white;
+    /* Active text color */
+    background-color: #56aad4;
+    /* Active background color */
+    /* Other styling */
+}
+
+/* Style for nav item containers */
+.nav-item {
+    padding: 0.1rem;
+    /* Padding on all sides */
+}
+
+/* Style for fixed tag menu items */
+#fixedTagMenu .nav-item {
+    margin: 0 0.5rem;
+    /* Add some space between items */
+}
+
+/* Additional styles to ensure full width with no padding or margin */
+.container,
+.container-fluid,
+.container-lg,
+.container-md,
+.container-sm,
+.container-xl,
+.container-xxl {
+    padding-right: 0;
+    /* Remove padding on the right */
+    padding-left: 0;
+    /* Remove padding on the left */
+    margin-right: auto;
+    margin-left: auto;
+    width: 100%;
+    /* Full width */
+}
+
+/* Style for the linksContainer with hidden scrollbar */
+#linksContainer {
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    max-height: calc(100vh - 150px);
+    /* Adjust the max-height as needed */
+
+    /* Hide scrollbar for Webkit browsers like Chrome, Safari */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge, and Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+/* Style for the first letter of each link */
+#linksContainer a::first-letter {
+    font-size: 1.5em;
+    /* Adjust the size as needed */
+    font-weight: bold;
+}
+
+/* Style for the link hover effect */
+#linksContainer a:hover {
+    color: #0f0f0f;
+    /* Optional: Change text color on hover if needed */
+    text-dergb(9, 9, 9)tion: none;
+    /* Optional: Remove underline on hover if needed */
+}
+
+
+/* Style for active tag links with rounded corners */
+.nav-link.active {
+    background-color: #56aad4;
+    color: white;
+    border-radius: 0.6rem;
+    /* Adjust the value to get the desired roundness */
+}
+
+/* Style for the main content area */
+#linksContainer a {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    text-decoration: none;
+}
+
+#linksContainer a:hover {
+    text-decoration: underline;
+}
+
+
+/* Style for the iframe container */
+#iframeContainer {
+    display: flex;
+    /* Use flexbox to center the child iframe */
+    justify-content: center;
+    /* Center horizontally */
+    align-items: center;
+    /* Center vertically */
+    height: 100vh;
+    /* Full height of the viewport */
+    padding: 0;
+    /* No padding */
+    margin: 0;
+    /* No margin */
+}
+
+/* Style for the iframe */
+#docIframe {
+    width: 80%;
+    /* Set the width of the iframe */
+    height: 80vh;
+    /* Set the height of the iframe */
+    border: none;
+    /* No border */
+}
+
+/* Custom styles for the documentation link */
+.card-link {
+    text-decoration: none;
+}
+
+/* Style for the card */
+.card {
+    /* Add any custom styles for the card here */
+}
+
+/* Custom styles for the card hover effect */
+.card-title:hover {
+    cursor: pointer;
+    /* Change the cursor to indicate the title is clickable */
+}
+
+.card-title:hover .card {
+    background-color: #56aad4;
+    /* Light gray background color on hover */
+}
+
+/* Additional custom styles */
+/* ... */

@@ -1,72 +1,49 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="favicon.ico">
-    <link rel="canonical" href="https://getbootstrap.com/docs/3.4/examples/dashboard/">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tag-Based Navigation</title>
+  <link rel="stylesheet" href="css/dynastart.css">
+  <!-- Include Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Optional: Include jQuery and Bootstrap Bundle JS (includes Popper.js for tooltips & popovers) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <!-- Include Bootstrap Bundle JS (includes Popper.js for tooltips & popovers) -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-    <title>DynaStart</title>
+</head>
+<body>
+    <!-- Fixed Tags Bar -->
+    <div class="fixed-tags-bar ">
+        <ul class="nav" id="fixedTagMenu">
+            <!-- Fixed tag items will be inserted here using JavaScript -->
+        </ul>
+    </div>
+    
+  <!-- Tag Menu Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav" id="tagMenu">
+        <!-- Tag menu items will be inserted here using JavaScript -->
+      </ul>
+    </div>
+    </nav>
+        
+    <!-- Search Bar -->
+    <div class="container mt-2">
+        <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Type to search all items in top menu selected Tags...">
+    </div>
+    <!-- Main content area for displaying links -->
+    <div class="container mt-5" id="linksContainer">
+      <!-- Links will be inserted here using JavaScript -->
+    </div>
 
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <script src="js/jquery-3.6.0.min.js"></script>
-    <script src="js/fa-all.js"></script>
-    <script src="js/holder.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="dynacontent.js"></script>
-    <script src="js/dynastart.js"></script>
-    <script type="text/javascript" src="js/yaml.js"></script>
-    <link rel="stylesheet" href="css/dynastart.css">
-  </head>
-
-  <body>
-    <!-- Image and text -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container-fluid">
-          <a href="#" class="navbar-brand">DynaStart</a>
-          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-              <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarCollapse">
-              <div class="navbar-nav" id="dynamenu">
-                <a class="nav-item nav-link active" href="#" onclick='dynastart_search_and_update("");';>All <span class="sr-only">(current)</span></a>
-              </div>
-          </div>
-      </div>
-  </nav>
-    <div class=".container-fluid">
-    <div class="row justify-content-center mt-4">
-    </div>
-    </div>
-    <div class=".container-fluid">
-    <div class="row justify-content-center">
-        <input type="text" class="txtInput" id="searchTheKey" autofocus placeholder="Enter keyword for search">
-    </div>
-    <div class="box_content">
-        <ol class="rounded-list">
-            <li>
-                <ol id="searchresults">
-                </ol>
-            </li>
-        </ol>
-    </div>
-    <div class=".container-fluid">
-      <div class="row justify-content-center">
-            <ul id="hyperlinks" class=".list-unstyled">
-      </div>
-    </div>
-    <script>
-    $("#searchTheKey").on('keyup', function() {
-        dyna_searchvalue = $("#searchTheKey").val().toLowerCase();
-        console.log(`key entered: ${dyna_searchvalue}`);
-        dynastart_search_and_update();
-    })
-    </script>
-  </body>
+  <!-- Include your JavaScript file -->
+  <script src="data/metadata.js"></script>
+  <script src="data/hyperlinks.js"></script>
+  <script src="js/dynastart.js"></script>
+</body>
 </html>
