@@ -1,11 +1,14 @@
 // Assuming this is the path/to/your/javascriptfile.js file
 let allLinks = []; // This will hold the original array of links and tags
+let selectedLinks = []; // This will hold the original array of links and tags
+
 let tagLength = 6
 // Keep track of selected tags
 let selectedTags = new Set();
 let selectedFixedTags = new Set();
 
 function loadData() {
+    console.log("loadData");
     if (metaData.pageTitle) {
         document.title = metaData.pageTitle; // Set the page title
     }
@@ -42,7 +45,7 @@ function createFixedTagMenuItems(fixedTags) {
         listItem.className = 'nav-item';
         const link = document.createElement('a');
         link.className = 'nav-link';
-        link.href = '#';
+        link.href = `#${item.tag}`; // restore in reload based on href
         link.textContent = item.tag;
         link.title = item.description; // Set the tooltip to the tag's description
         link.addEventListener('click', (event) => {
@@ -68,7 +71,7 @@ function createMenuItems(uniqueTags) {
         listItem.className = 'nav-item';
         const link = document.createElement('a');
         link.className = 'nav-link';
-        link.href = '#';
+        link.href = `#`; // Not restorable 
         link.textContent = tag.slice(0, tagLength); // Truncate tag to a maximum of 6 characters
         //link.textContent = tag;
         link.addEventListener('click', (event) => {
@@ -92,6 +95,7 @@ function toggleTagSelection(linkElement, tag) {
     // Save the updated state of selectedTags to localStorage
     localStorage.setItem('selectedTags', JSON.stringify([...selectedTags]));
     filterLinksByTags(); // Re-filter and display links based on the updated selected tags
+    filterLinksBySearch();
 }
 
 // Function to toggle tag selection and update the filter
@@ -106,39 +110,35 @@ function toggleFixedTagSelection(linkElement, tag) {
     // Save the updated state of selectedTags to localStorage
     localStorage.setItem('selectedFixedTags', JSON.stringify([...selectedFixedTags]));
     filterLinksByTags(); // Re-filter and display links based on the updated selected tags
+    filterLinksBySearch();
 }
 
 // Function to filter and display links that have at least one selected tag,
 // or display clicked links sorted by the number of clicks if no tags are selected
 function filterLinksByTags() {
     let linksToDisplay;
+    console.log("filterLinksByTags")
 
-    // If no tags are selected, display clicked links sorted by the number of clicks
-    if (selectedTags.size === 0) {
-
-        // Retrieve the clicked links object from localStorage and convert it to an array of [url, count] pairs
-        const clickedLinks = JSON.parse(localStorage.getItem('clickedLinks') || '{}');
-        const clickedLinksArray = Object.entries(clickedLinks);
-
-        // Sort the array by the number of clicks in descending order
-        clickedLinksArray.sort((a, b) => b[1] - a[1]);
-  
-        linksToDisplay = allLinks.filter(item =>
-            item.tags.some(tag => selectedTags.has(tag))
-        );
-
-    } else {
-        // Otherwise, filter links that have at least one selected tag
-        linksToDisplay = allLinks.filter(item =>
-            item.tags.some(tag => selectedTags.has(tag))
-        );
-        linksToDisplay = allLinks.filter(item =>
+    // filter links based on primary tag and selected tag
+    console.log(allLinks);
+    if (selectedFixedTags.size > 0) { // Check if there are any selected fixed tags
+        selectedLinks = allLinks.filter(item =>
             item.tags.some(tag => selectedFixedTags.has(tag))
         );
-
+    } else {
+        selectedLinks = allLinks; // If no fixed tags are selected, use all links
     }
 
-    displayLinks(linksToDisplay); // Display the determined set of links
+    console.log(linksToDisplay);
+    // If selectedTags is not empty, filter by selectedTags, otherwise use all links
+    if (selectedTags.size > 0) {
+        selectedLinks = selectedLinks.filter(item =>
+            item.tags.some(tag => selectedTags.has(tag))
+        );
+    }
+
+
+    displayLinks(selectedLinks); // Display the determined set of links
 }
 
 function handleLinkClick(event) {
@@ -154,7 +154,8 @@ function handleLinkClick(event) {
     }
     localStorage.setItem('clickedLinks', JSON.stringify(clickedLinks));
     // Optionally, navigate to the clicked URL
-    window.location.href = event.target.href;
+    // window.location.href = event.target.href; // same tav
+    window.open(event.target.href); // new tab
 }
 
 function displayClickedLinks() {
@@ -182,6 +183,8 @@ function displayClickedLinks() {
 function displayLinks(links) {
     const linksContainer = document.getElementById('linksContainer');
     linksContainer.innerHTML = ''; // Clear previous content
+
+    console.log(links);
 
     links.forEach((item) => {
         // Create card container
@@ -247,29 +250,21 @@ function displayLinks(links) {
 // Function to filter and display links that match the search query
 function filterLinksBySearch() {
     const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-    filteredLinks = allLinks.filter(item =>
+    console.log("filterLinksBySearch");
+    filteredLinks = selectedLinks.filter(item =>
         item.link.toLowerCase().includes(searchQuery)
     );
-    console.log(searchQuery);
-    if ( searchQuery == "") {
-        filteredLinks = [];
-        filterLinksByTags();
-    }
-    else {
-        filteredLinks = filteredLinks.filter(item =>
-            item.tags.some(tag => selectedFixedTags.has(tag))
-        );
-        displayLinks(filteredLinks);
-    }
+    displayLinks(filteredLinks);
 }
 
-// Function to restore the state of selected tags from localStorage
+// Function to restore the state of selected fixed tags from localStorage
 function restoreSelectedTagsState() {
-    const savedTags = JSON.parse(localStorage.getItem('selectedTags') || '[]');
+    const savedTags = JSON.parse(localStorage.getItem('selectedFixedTags') || '[]');
+    console.log(savedTags);
     savedTags.forEach(tag => {
         const linkElement = document.querySelector(`.nav-link[href="#${tag}"]`);
         if (linkElement) {
-            selectedTags.add(tag); // Restore the tag to the selected set
+            selectedFixedTags.add(tag); // Restore the tag to the selected set
             linkElement.classList.add('active'); // Add active class to change color
         }
     });
