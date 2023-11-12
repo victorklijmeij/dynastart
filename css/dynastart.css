@@ -73,7 +73,7 @@ body {
 /* Change the color for the menu item text on hover and focus */
 .nav-link:hover,
 .nav-link:focus {
-    color: #white;
+    color: white;
     /* Lighter shade of white for hover/focus */
 }
 
@@ -137,7 +137,7 @@ body {
 
 /* Style for the first letter of each link */
 #linksContainer a::first-letter {
-    font-size: 1.5em;
+    font-size: 1em;
     /* Adjust the size as needed */
     font-weight: bold;
 }
