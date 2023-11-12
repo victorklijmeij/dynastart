@@ -53,7 +53,7 @@ const hyperlinksData = [
     "link": "https://www.techcrunch.com",
     "title": "TechCrunch",
     "tooltip": "The latest technology news and information on startups",
-    "tags": ["Technology", "Startups", "Gadgets"],
+    "tags": ["Technology", "Startups", "Gadgets","TAG2"],
     "documentationLink": "https://www.techcrunch.com/documentation"
   },
   {

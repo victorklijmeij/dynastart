@@ -9,26 +9,31 @@ let selectedFixedTags = new Set();
 
 function loadData() {
     console.log("loadData");
+
     if (metaData.pageTitle) {
         document.title = metaData.pageTitle; // Set the page title
     }
-    if (metaData.tagLength) {
+
+    if (metaData.tagLength !== undefined) {
         tagLength = metaData.tagLength;
-        document.title = metaData.pageTitle; // Set the page title
     }
+
     if (metaData.fixedTags && Array.isArray(metaData.fixedTags)) {
         createFixedTagMenuItems(metaData.fixedTags); // Create fixed tag menu items
     } else {
         console.error('The JSON does not contain a valid "fixedTags" array.');
     }
-    
-    const fixedTags = metaData.fixedTags.map(item => item.tag); // Create an  array of fixedTags
+
+    const fixedTags = metaData.fixedTags.map(item => item.tag); // Create an array of fixedTags
+
     // Fetch the unique tags and all links as shown in the previous examples
     allLinks = hyperlinksData; // Store the original data
-    const uniqueTags = getUniqueTags(hyperlinksData).filter(tag => !fixedTags.includes(tag)) // Use the getUniqueTags function from earlier  
+
+    const uniqueTags = getUniqueTags(hyperlinksData).filter(tag => !fixedTags.includes(tag)); // Use the getUniqueTags function from earlier
     createMenuItems(uniqueTags); // Create other tag menu items
     displayLinks(allLinks); // Display all links by default
 }
+
 
 // Function to get unique tags from an array of items
 function getUniqueTags(items) {
@@ -70,7 +75,7 @@ function createMenuItems(uniqueTags) {
         const listItem = document.createElement('li');
         listItem.className = 'nav-item';
         const link = document.createElement('a');
-        link.className = 'nav-link';
+        link.className = 'nav-link tag';
         link.href = `#`; // Not restorable 
         link.textContent = tag.slice(0, tagLength); // Truncate tag to a maximum of 6 characters
         //link.textContent = tag;
@@ -95,7 +100,6 @@ function toggleTagSelection(linkElement, tag) {
     // Save the updated state of selectedTags to localStorage
     localStorage.setItem('selectedTags', JSON.stringify([...selectedTags]));
     filterLinksByTags(); // Re-filter and display links based on the updated selected tags
-    filterLinksBySearch();
 }
 
 // Function to toggle tag selection and update the filter
@@ -110,36 +114,79 @@ function toggleFixedTagSelection(linkElement, tag) {
     // Save the updated state of selectedTags to localStorage
     localStorage.setItem('selectedFixedTags', JSON.stringify([...selectedFixedTags]));
     filterLinksByTags(); // Re-filter and display links based on the updated selected tags
-    filterLinksBySearch();
 }
 
 // Function to filter and display links that have at least one selected tag,
 // or display clicked links sorted by the number of clicks if no tags are selected
 function filterLinksByTags() {
-    let linksToDisplay;
-    console.log("filterLinksByTags")
+    console.log("filter links");
+    let selectedLinks = [];
+    let tagselectedLinks;
 
-    // filter links based on primary tag and selected tag
-    console.log(allLinks);
-    if (selectedFixedTags.size > 0) { // Check if there are any selected fixed tags
-        selectedLinks = allLinks.filter(item =>
+
+    const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+    // pre-filter all links and limit by search input
+    searchfilteredLinks = allLinks.filter(item =>
+        item.title.toLowerCase().includes(searchQuery)
+    );
+    if (searchQuery == "") {
+        searchfilteredLinks = allLinks;
+    } else {
+        console.log("filtered with search");
+    }
+
+    // console.log("filterLinksByTags");
+    // console.log(searchfilteredLinks);
+    if (selectedFixedTags.size > 0) {
+        tagselectedLinks = searchfilteredLinks.filter(item =>
             item.tags.some(tag => selectedFixedTags.has(tag))
         );
     } else {
-        selectedLinks = allLinks; // If no fixed tags are selected, use all links
+        tagselectedLinks = searchfilteredLinks;
     }
 
-    console.log(linksToDisplay);
-    // If selectedTags is not empty, filter by selectedTags, otherwise use all links
+    // console.log(linksToDisplay);
+    // If tags are selected, filter the links to include items with tags and items with no fixed tags.
+    // These are considered generic for all top level filters
     if (selectedTags.size > 0) {
-        selectedLinks = selectedLinks.filter(item =>
+        selectedLinks = tagselectedLinks.filter(item =>
             item.tags.some(tag => selectedTags.has(tag))
         );
+    } else {
+        selectedLinks = tagselectedLinks;
     }
 
+    // Filter tags and remove tags that have no items
+    const allTags = [];
+    tagselectedLinks.forEach(item => {
+        allTags.push(...item.tags);
+    });
 
-    displayLinks(selectedLinks); // Display the determined set of links
+    const uniqueTags = new Set(allTags);
+
+    const filteredTags = [];
+    uniqueTags.forEach(tag => {
+        if (tagselectedLinks.some(item => item.tags.includes(tag))) {
+            filteredTags.push(tag);
+        }
+    });
+    // console.log("Filtered tags");
+    // console.log(filteredTags);
+
+    // Hide tags that have no items
+    const allTagElements = document.querySelectorAll('.tag');
+    allTagElements.forEach(tagElement => {
+        const tag = tagElement.textContent;
+        if (!filteredTags.includes(tag)) {
+            tagElement.style.display = 'none';
+        } else {
+            tagElement.style.display = 'inline-block';
+        }
+    });
+
+    displayLinks(selectedLinks);
 }
+
 
 function handleLinkClick(event) {
     event.preventDefault();
@@ -184,8 +231,6 @@ function displayLinks(links) {
     const linksContainer = document.getElementById('linksContainer');
     linksContainer.innerHTML = ''; // Clear previous content
 
-    console.log(links);
-
     links.forEach((item) => {
         // Create card container
         const card = document.createElement('div');
@@ -226,7 +271,7 @@ function displayLinks(links) {
 
             // Create the book icon for the documentation link
             const icon = document.createElement('i');
-            icon.className = 'fas fa-book'; // Font Awesome book icon
+            icon.className = 'fas fa-book fa-lg '; // Font Awesome book icon
 
             // Append the book icon to the documentation link
             docLink.appendChild(icon);
@@ -247,20 +292,10 @@ function displayLinks(links) {
     });
 }
 
-// Function to filter and display links that match the search query
-function filterLinksBySearch() {
-    const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-    console.log("filterLinksBySearch");
-    filteredLinks = selectedLinks.filter(item =>
-        item.link.toLowerCase().includes(searchQuery)
-    );
-    displayLinks(filteredLinks);
-}
-
 // Function to restore the state of selected fixed tags from localStorage
 function restoreSelectedTagsState() {
     const savedTags = JSON.parse(localStorage.getItem('selectedFixedTags') || '[]');
-    console.log(savedTags);
+    console.log("Restore tag selection")
     savedTags.forEach(tag => {
         const linkElement = document.querySelector(`.nav-link[href="#${tag}"]`);
         if (linkElement) {
@@ -277,12 +312,11 @@ $(function () {
 });
 
 // Event listener for the search input field
-document.getElementById('searchInput').addEventListener('input', filterLinksBySearch);
+document.getElementById('searchInput').addEventListener('input', filterLinksByTags);
 
 // Set focus on the search bar when the page loads
 document.addEventListener('DOMContentLoaded', (event) => {
     loadData();
-    // filterLinksByTags(); // Call this function to display the initial set of links
     restoreSelectedTagsState();
     document.getElementById('searchInput').focus();
 });
