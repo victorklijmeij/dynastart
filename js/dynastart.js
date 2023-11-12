@@ -1,11 +1,11 @@
 // Assuming this is the path/to/your/javascriptfile.js file
-let allLinks = []; // This will hold the original array of links and tags
-let selectedLinks = []; // This will hold the original array of links and tags
-
-let tagLength = 6
+allLinks = []; // This will hold the original array of links and tags
+selectedLinks = []; // This will hold the original array of links and tags
+fixedTags = [];
+tagLength = 6
 // Keep track of selected tags
-let selectedTags = new Set();
-let selectedFixedTags = new Set();
+selectedTags = new Set();
+selectedFixedTags = new Set();
 
 function loadData() {
     console.log("loadData");
@@ -18,13 +18,13 @@ function loadData() {
         tagLength = metaData.tagLength;
     }
 
-    if (metaData.fixedTags && Array.isArray(metaData.fixedTags)) {
-        createFixedTagMenuItems(metaData.fixedTags); // Create fixed tag menu items
+    if (metaData.topLevelFilters && Array.isArray(metaData.topLevelFilters)) {
+        createFixedTagMenuItems(metaData.topLevelFilters); // Create fixed tag menu items
     } else {
-        console.error('The JSON does not contain a valid "fixedTags" array.');
+        console.error('The JSON does not contain a valid "topLevelFilters" array.');
     }
 
-    const fixedTags = metaData.fixedTags.map(item => item.tag); // Create an array of fixedTags
+    fixedTags = metaData.topLevelFilters.map(item => item.tag); // Create an array of fixedTags
 
     // Fetch the unique tags and all links as shown in the previous examples
     allLinks = hyperlinksData; // Store the original data
@@ -138,9 +138,30 @@ function filterLinksByTags() {
     // console.log("filterLinksByTags");
     // console.log(searchfilteredLinks);
     if (selectedFixedTags.size > 0) {
-        tagselectedLinks = searchfilteredLinks.filter(item =>
-            item.tags.some(tag => selectedFixedTags.has(tag))
-        );
+        tagselectedLinks = [] //searchfilteredLinks// .filter(item =>
+        //     item.tags.some(tag => selectedFixedTags.has(tag))
+        // );
+        // rework to select all items with and without tag
+        console.log(selectedFixedTags);
+        searchfilteredLinks.forEach((item) => {
+            // include  items that have the fixed tag
+            if (item.tags.some(element => selectedFixedTags.has(element))) {
+                console.log("yes");
+                tagselectedLinks.push(item);
+            } else {
+                // include if the item has no other fixed tags 
+                if (! item.tags.some(element => fixedTags.includes(element))) {
+                //     console.log("Skipping due to fixed tag");
+                // } else {
+                    console.log(`No fixed tag, adding item "$item.name"`);
+                    // console.log(item.tags); 
+                    // console.log(fixedTags);
+                    tagselectedLinks.push(item);
+                }
+            }
+          }); 
+
+
     } else {
         tagselectedLinks = searchfilteredLinks;
     }

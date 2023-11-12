@@ -16,7 +16,7 @@
 const metaData = {
   pageTitle: "dynaStart",
   tagLength: 10,
-  fixedTags: [
+  topLevelFilters: [
     { "tag": "TAG1", "description": "filter on TAG 1" },
     { "tag": "TAG2", "description": "filter on TAG 2" },
     { "tag": "TAG3", "description": "filter on TAG 3" },
