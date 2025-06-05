@@ -20,6 +20,30 @@ function debugLog(...args) {
     }
 }
 
+
+async function loadFeed(url) {
+  const res = await fetch(url);
+  const xmlText = await res.text();
+
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+
+  const items = xmlDoc.querySelectorAll("item"); // for RSS
+  // const entries = xmlDoc.querySelectorAll("entry"); // for Atom
+
+  const feed = Array.from(items).map(item => ({
+    title: item.querySelector("title")?.textContent,
+    link: item.querySelector("link")?.textContent,
+    description: item.querySelector("description")?.textContent,
+    pubDate: item.querySelector("pubDate")?.textContent
+  }));
+
+  console.log(feed);
+}
+
+// Demo load feed from tweakers
+loadFeed("https://tweakers.net/feeds/nieuws.xml");
+
 /**
  * Generates a unique identifier (UID) for new items.
  * @returns {string} A unique identifier string.
