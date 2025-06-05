@@ -9,6 +9,27 @@ body {
     /* Set the height to prevent unnecessary scrolling */
 }
 
+/* Hide the edit buttons on mobile devices */
+@media (max-width: 768px) {
+    .edit-button {
+        display: none !important;
+    }
+}
+
+/* Hide the add button and secondary tags on mobile devices */
+@media (max-width: 768px) {
+    #addSiteButtonContainer,
+    #tagMenu {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        display: none;
+    }
+}
+
 /* Style for the navbar background */
 .navbar {
     background-color: black;
@@ -43,6 +64,12 @@ body {
     /* Remove default list styling */
     width: 100%;
     /* Full width */
+    position: relative;
+}
+
+#addSiteButtonContainer {
+    position: absolute;
+    left: 0;
 }
 
 /* Center the fixed tag menu items */
@@ -122,6 +149,9 @@ body {
     /* Enable vertical scrolling */
     max-height: calc(100vh - 150px);
     /* Adjust the max-height as needed */
+    padding-bottom: 1rem;
+    margin-bottom: 10px;
+    /* Add padding to the bottom to ensure the last item is visible */
 
     /* Hide scrollbar for Webkit browsers like Chrome, Safari */
     &::-webkit-scrollbar {
@@ -135,6 +165,20 @@ body {
     /* Firefox */
 }
 
+#exportLinksButtonContainer {
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#exportLinksButton {
+    background-color: red;
+    border-color: red;
+    margin-left: 10px; /* Add margin to align it to the left */
+}
+
 /* Style for the first letter of each link */
 #linksContainer a::first-letter {
     font-size: 1em;
@@ -146,10 +190,14 @@ body {
 #linksContainer a:hover {
     color: #0f0f0f;
     /* Optional: Change text color on hover if needed */
-    text-dergb(9, 9, 9)tion: none;
+    text-decoration: none;
     /* Optional: Remove underline on hover if needed */
 }
 
+.edit-button {
+    margin-left: 10px;
+    margin-top: 10px;
+}
 
 /* Style for active tag links with rounded corners */
 .nav-link.active {
@@ -219,5 +267,41 @@ body {
     /* Light gray background color on hover */
 }
 
-/* Additional custom styles */
-/* ... */
+/* Modal styles */
+.modal-header {
+    background-color: #56aad4;
+    color: white;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+}
+.copy-image {
+    width: 20px; /* Set the width of the image */
+    height: 20px; /* Set the height of the image */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    margin-left: 5px; /* Add some space between the code and the image */
+}
+
+.btn-primary {
+    background-color: #56aad4;
+    border-color: #56aad4;
+}
+.btn-primary:hover {
+    background-color: #56aad4; /* Slightly darker shade for hover */
+    border-color: #56aad4;
+}
+
+textarea {
+    width: 100%;
+    /* Make textarea fluid width */
+}
+
+.edit-button {
+    background-color: #56aad4;
+    border-color: #56aad4;
+}
+
+.card-body {
+    background-color: #fcfcfc;
+}

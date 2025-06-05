@@ -4,22 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tag-Based Navigation</title>
-  <link rel="stylesheet" href="css/dynastart.css">
+  <!-- Favicon with letter D -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9IiMzMzgiLz4KICA8dGV4dCB4PSI1IiB5PSIxNiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE1IiBmaWxsPSJ3aGl0ZSI+RDwvdGV4dD4KPC9zdmc+">
+  <script src="data/metadata.js"></script>
+  <script src="data/hyperlinks.js"></script>
   <!-- Include Bootstrap CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/all.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/dynastart.css">
   <!-- Optional: Include jQuery and Bootstrap Bundle JS (includes Popper.js for tooltips & popovers) -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="js/jquery-3.5.1.slim.min.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
   <!-- Include Bootstrap Bundle JS (includes Popper.js for tooltips & popovers) -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
+  <script src="js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <!-- Fixed Tags Bar -->
-    <div class="fixed-tags-bar ">
+    <div class="fixed-tags-bar">
         <ul class="nav" id="fixedTagMenu">
             <!-- Fixed tag items will be inserted here using JavaScript -->
+            <li class="nav-item" id="addSiteButtonContainer">
+                <button class="btn btn-primary" id="addSiteButton">Add</button>
+            </li>
+            <li class="nav-item" id="exportLinksButtonContainer" style="display: none;">
+                <button class="btn btn-secondary" id="exportLinksButton" data-toggle="modal" data-target="#exportModal">Export!</button>
+            </li>
         </ul>
     </div>
     
@@ -34,16 +44,135 @@
         
     <!-- Search Bar -->
     <div class="container mt-2">
-        <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Type to search all items in top menu selected Tags...">
+        <input type="search" id="searchInput" class="form-control py-2 rounded-pill mr-1 pr-5" placeholder="Search: type to search title and body, '!title' for title only, '#tooltip' for tooltip only, '>external' for external search">
     </div>
     <!-- Main content area for displaying links -->
     <div class="container mt-5" id="linksContainer">
       <!-- Links will be inserted here using JavaScript -->
     </div>
 
-  <!-- Include your JavaScript file -->
-  <script src="data/metadata.js"></script>
-  <script src="data/hyperlinks.js"></script>
+  <!-- Modal -->
+  <div class="modal fade" id="addSiteModal" tabindex="-1" aria-labelledby="addSiteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addSiteModalLabel">Add New Site</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addSiteForm">
+            <div class="form-group">
+              <label for="siteTitle">Title</label>
+              <input type="text" class="form-control" id="siteTitle" required>
+            </div>
+            <div class="form-group">
+              <label for="siteLink">Link</label>
+              <input type="url" class="form-control" id="siteLink" required>
+            </div>
+            <div class="form-group">
+              <label for="siteTooltip">Additional text or markdown</label>
+              <textarea id="siteTooltip" cols="45" rows="5"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="siteTags">Tags (comma separated)</label>
+              <input type="text" class="form-control" id="siteTags" required>
+            </div>
+            <div class="form-group">
+              <label for="siteDocumentationLink">Documentation Link</label>
+              <input type="url" class="form-control" id="siteDocumentationLink">
+            </div>
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="siteOpenInTab">
+              <label class="form-check-label" for="siteOpenInTab">Open in new tab</label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="saveSiteButton">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editSiteModal" tabindex="-1" aria-labelledby="editSiteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editSiteModalLabel">Edit Site</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="editSiteForm">
+            <div class="form-group">
+              <strong><label for="editSiteTitle">Title</label></strong>
+              <input type="text" class="form-control" id="editSiteTitle" required>
+            </div>
+            <div class="form-group">
+              <strong><label for="editSiteLink">Link</label></strong>
+              <input type="url" class="form-control" id="editSiteLink" required>
+            </div>
+            <div class="form-group">
+              <strong><label for="editSiteTooltip">Additional text or markdown</label></strong>
+              <textarea id="editSiteTooltip" cols="48" rows="5"></textarea>
+            </div>
+            <div class="form-group">
+              <strong><label for="editSiteTags">Tags (comma separated)</label></strong>
+              <input type="text" class="form-control" id="editSiteTags" required>
+            </div>
+            <div class="form-group">
+              <strong><label for="editSiteDocumentationLink">Documentation Link</label></strong>
+              <input type="url" class="form-control" id="editSiteDocumentationLink">
+            </div>
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="editSiteOpenInTab">
+              <label class="form-check-label" for="editSiteOpenInTab">Open in new tab</label>
+            </div>
+            <div class="form-group">
+              <label for="editSiteUid">UID</label>
+              <input type="text" class="form-control" id="editSiteUid" readonly>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" id="deleteSiteButton">Delete</button>
+          <button type="button" class="btn btn-primary" id="saveEditSiteButton">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export Modal -->
+  <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exportModalLabel">Export Links</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>To export your links, click the "Save file" button below. This will generate a file containing all your links. Save and place it in the data directory overwriting the previous file. Then reload the page to activate changes</p>
+          <button type="button" class="btn btn-primary" id="finalExportButton">Save file</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/marked.umd.min.js"></script>
+  <script>
+    // Check if the URL contains the 'openincurrent' parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const openInCurrent = urlParams.has('openincurrent');
+    localStorage.setItem('openInCurrent', openInCurrent);
+  </script>
   <script src="js/dynastart.js"></script>
 </body>
 </html>
