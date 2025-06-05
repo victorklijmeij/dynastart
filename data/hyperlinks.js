@@ -22,6 +22,7 @@ const hyperlinksData = [
     "link": "https://www.nu.nl",
     "title": "NU.nl",
     "tooltip": "Netherlands News - General and Current Events",
+    "rssfeed": true,
     "documentationLink": "https://www.nu.nl/documentation",
     "tags": [
       "General",

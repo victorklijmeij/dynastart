@@ -439,7 +439,38 @@ function handleLinkClick(event) {
         clickedLinks[uid] = 1;
     }
     localStorage.setItem('clickedLinks', JSON.stringify(clickedLinks));
-    window.open(event.target.href, event.target.target);
+    const item = getItem(uid);
+    if (item && item.rssfeed) {
+        fetchRssFeed(item.link);
+    } else {
+        window.open(event.target.href, event.target.target);
+    }
+}
+
+/**
+ * Fetches an RSS feed and displays its items in place of the current links.
+ * @param {string} url - The RSS feed URL.
+ */
+async function fetchRssFeed(url) {
+    try {
+        const response = await fetch(url);
+        const text = await response.text();
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(text, 'application/xml');
+        const items = Array.from(xml.querySelectorAll('item')).map(it => ({
+            title: it.querySelector('title') ? it.querySelector('title').textContent : '',
+            link: it.querySelector('link') ? it.querySelector('link').textContent : '#',
+            tooltip: it.querySelector('description') ? it.querySelector('description').textContent : '',
+            tags: [],
+            documentationLink: '',
+            uid: generateUID(),
+            openInTab: true,
+            rssfeed: false
+        }));
+        displayLinks(items);
+    } catch (err) {
+        console.error('Failed to fetch RSS feed', err);
+    }
 }
 
 /**
@@ -464,6 +495,7 @@ function getAlllinks() {
             link.uid === updatedItem.uid &&
             link.title === updatedItem.title &&
             link.openInTab === updatedItem.openInTab &&
+            (link.rssfeed ?? false) === (updatedItem.rssfeed ?? false) &&
             link.link === updatedItem.link &&
             link.tooltip === updatedItem.tooltip &&
             JSON.stringify(link.tags) === JSON.stringify(updatedItem.tags) &&
@@ -539,8 +571,13 @@ function displayLinks(links) {
         const hasScheme = /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(item.link);
         cardTitleLink.href = hasScheme ? item.link : metaData.noteUriScheme + item.link.replace(/\s+/g, '_');
         cardTitleLink.className = 'card-title h5'; // Use 'h5' for title size
-        // Add fa-note-sticky icon if the link is a note, or fa-link if it starts with http/https
-        if (!hasScheme) {
+        // Add icon depending on link type
+        if (item.rssfeed) {
+            const rssIcon = document.createElement('i');
+            rssIcon.className = 'fas fa-rss fa-sm';
+            cardTitleLink.appendChild(rssIcon);
+            cardTitleLink.appendChild(document.createTextNode(' '));
+        } else if (!hasScheme) {
             const noteIcon = document.createElement('i');
             noteIcon.className = 'fas fa-note-sticky fa-sm';
             cardTitleLink.appendChild(noteIcon);
@@ -674,6 +711,7 @@ function editLink(item) {
     document.getElementById('editSiteLink').value = item.link;
     document.getElementById('editSiteTooltip').value = item.tooltip;
     document.getElementById('editSiteOpenInTab').checked = item.openInTab;
+    document.getElementById('editSiteRssFeed').checked = item.rssfeed;
     console.log("Edit :", item);
     document.getElementById('editSiteTags').value = item.tags.join(', ');
     document.getElementById('editSiteDocumentationLink').value = item.documentationLink;
@@ -691,6 +729,7 @@ document.getElementById('saveEditSiteButton').addEventListener('click', () => {
     const tags = document.getElementById('editSiteTags').value.split(',').map(tag => tag.trim());
     const documentationLink = document.getElementById('editSiteDocumentationLink').value;
     const openInTab = document.getElementById('editSiteOpenInTab').checked;
+    const rssfeed = document.getElementById('editSiteRssFeed').checked;
 
     // Update the item with the new values
     const updatedItem = {
@@ -700,7 +739,8 @@ document.getElementById('saveEditSiteButton').addEventListener('click', () => {
         tags,
         documentationLink,
         uid,
-        openInTab
+        openInTab,
+        rssfeed
     };
 
     // Update the item in updated links if it exists otherwise add it
@@ -784,7 +824,7 @@ document.getElementById('finalExportButton').addEventListener('click', () => {
         `//   // ... more link objects\n` +                                                                                                                                                                                   
         `// ]\n\n` +                                                                                                                                                                                                          
         `// Embed the JSON data into the JavaScript file by assigning it to a variable\n` +                                                                                                                                   
-        `const hyperlinksData = ${JSON.stringify(getAlllinks().map(item => ({ ...item, openInTab: item.openInTab ?? false })), null, 2)};`                                                                                                                                                        
+        `const hyperlinksData = ${JSON.stringify(getAlllinks().map(item => ({ ...item, openInTab: item.openInTab ?? false, rssfeed: item.rssfeed ?? false })), null, 2)};`
     );  
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);
@@ -826,6 +866,7 @@ document.getElementById('addSiteButton').addEventListener('click', () => {
     document.getElementById('siteTitle').value = "";
     document.getElementById('siteLink').value = "";
     document.getElementById('siteTooltip').value = "";
+    document.getElementById('siteRssFeed').checked = false;
     $('#addSiteModal').modal('show');
 });
 
@@ -849,13 +890,15 @@ document.getElementById('saveSiteButton').addEventListener('click', () => {
 
     // New item construct
     const openInTab = document.getElementById('siteOpenInTab').checked;
+    const rssfeed = document.getElementById('siteRssFeed').checked;
     const newItem = {
         title,
         link,
         tooltip,
         tags,
         documentationLink,
-        openInTab
+        openInTab,
+        rssfeed
     };
 
     newItem.uid = generateUID();
