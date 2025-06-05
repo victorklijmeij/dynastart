@@ -5,9 +5,9 @@
 let allLinks = [];
 let selectedLinks = []; // This will hold the original array of links and tags
 let fixedTags = [];
-tagLength = 6;
-selectedFixedTags = new Set(); // Keep track of Fixed tags
-selectedTags = new Set();  // Keep track of secondary tags
+let tagLength = 6;
+let selectedFixedTags = new Set(); // Keep track of Fixed tags
+let selectedTags = new Set();  // Keep track of secondary tags
 let debug = false; // Global debug flag
 
 /**
@@ -94,9 +94,9 @@ function deleteDeletedLink(title) {
  */
 function getItem(uid) {
     const allLinks = getAlllinks();
-    item = allLinks.find(item => item.uid === uid);
-    debugLog("getItem ", item);
-    return item;
+    const foundItem = allLinks.find(item => item.uid === uid);
+    debugLog("getItem ", foundItem);
+    return foundItem;
 }
 
 /**
@@ -283,11 +283,11 @@ function toggleTagSelection(linkElement, tag) {
  * or displays clicked links sorted by the number of clicks if no tags are selected.
  */
 function filterLinksByTags() {
-    let selectedLinks = [];
+    selectedLinks = [];
     let tagselectedLinks = [];
     let allLinks = getAlllinks();
-    selectedTags = new Set(JSON.parse(localStorage.getItem('selectedTags') || '[]')) // TODO replace with secondaryTags
-    secondaryTags = getSelectedTags();
+    selectedTags = new Set(JSON.parse(localStorage.getItem('selectedTags') || '[]'));
+    const secondaryTags = getSelectedTags();
     const searchQuery = document.getElementById('searchInput').value.toLowerCase();
     // Determine search mode based on prefix
     let searchMode = 'default';
@@ -302,7 +302,7 @@ function filterLinksByTags() {
     }
 
     // Pre-filter all links based on search mode
-    searchfilteredLinks = allLinks.filter(item => {
+    let searchfilteredLinks = allLinks.filter(item => {
         if (searchMode === 'title') {
             return item.title.toLowerCase().includes(query);
         } else if (searchMode === 'tooltip') {
@@ -336,7 +336,7 @@ function filterLinksByTags() {
     debugLog("Filtered links fixed tags ", tagselectedLinks);
 
     // If secondary tags are selected, filter the links to include items with tags and items with none of the fixed tags.
-    newTags = [];
+    let newTags = [];
     selectedTags.forEach((item) => {
         debugLog(item);
         tagselectedLinks.forEach(tag => {
@@ -538,8 +538,8 @@ function displayLinks(links) {
             cardTitleLink.appendChild(document.createTextNode(' ')); // Add space between icon and text
         }
         cardTitleLink.appendChild(document.createTextNode(item.title));
-        target = "_self"
-        if (item.openInTab) { target = "_blank" }; 
+        let target = "_self";
+        if (item.openInTab) { target = "_blank" };
         cardTitleLink.setAttribute('target', target); // Open in new tab or self
         cardTitleLink.setAttribute('data-uid', item.uid); // Set data-uid attribute
         cardTitleLink.addEventListener('click', handleLinkClick);
@@ -649,7 +649,7 @@ function editLink(item) {
     document.getElementById('editSiteTitle').value = item.title;
     document.getElementById('editSiteLink').value = item.link;
     document.getElementById('editSiteTooltip').value = item.tooltip;
-    document.getElementById('editSiteOpenInTab').value = item.openInTab;
+    document.getElementById('editSiteOpenInTab').checked = item.openInTab;
     console.log("Edit :", item);
     document.getElementById('editSiteTags').value = item.tags.join(', ');
     document.getElementById('editSiteDocumentationLink').value = item.documentationLink;
