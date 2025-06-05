@@ -9,6 +9,7 @@ let tagLength = 6;
 let selectedFixedTags = new Set(); // Keep track of Fixed tags
 let selectedTags = new Set();  // Keep track of secondary tags
 let debug = false; // Global debug flag
+let currentFeedItems = null; // Holds items when viewing an RSS feed
 
 /**
  * Logs debug information to the console if the debug flag is set.
@@ -307,6 +308,8 @@ function toggleTagSelection(linkElement, tag) {
  * or displays clicked links sorted by the number of clicks if no tags are selected.
  */
 function filterLinksByTags() {
+    currentFeedItems = null;
+    document.getElementById('feedSearchContainer').style.display = 'none';
     selectedLinks = [];
     let tagselectedLinks = [];
     let allLinks = getAlllinks();
@@ -467,6 +470,9 @@ async function fetchRssFeed(url) {
             openInTab: true,
             rssfeed: false
         }));
+        currentFeedItems = items;
+        document.getElementById('feedSearchContainer').style.display = 'block';
+        document.getElementById('feedSearchInput').value = '';
         displayLinks(items);
     } catch (err) {
         console.error('Failed to fetch RSS feed', err);
@@ -848,8 +854,21 @@ function external_search() {
     }
 }
 
+// Filter currently displayed RSS feed items based on feed search box
+function filterCurrentFeed() {
+    if (!currentFeedItems) return;
+    const query = document.getElementById('feedSearchInput').value.toLowerCase();
+    const filtered = currentFeedItems.filter(item =>
+        item.title.toLowerCase().includes(query) || item.tooltip.toLowerCase().includes(query)
+    );
+    displayLinks(filtered);
+}
+
 // Event listener for the search input field
 document.getElementById('searchInput').addEventListener('input', filterLinksByTags);
+
+// Event listener for RSS feed search box
+document.getElementById('feedSearchInput').addEventListener('input', filterCurrentFeed);
 
 // Event listener for the Enter key in the search input field
 document.getElementById('searchInput').addEventListener('keypress', function(event) {
