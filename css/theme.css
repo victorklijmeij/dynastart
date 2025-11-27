@@ -1,0 +1,330 @@
+/**
+ * Dynastart Theme System
+ * CSS Variables-based theming for dynamic theme switching
+ */
+
+:root {
+  /* General */
+  --bg-color: #f5f5f5;
+
+  /* Fixed Tags Bar (Primary Tags) */
+  --fixed-tags-bg: #000000;
+  --fixed-tags-text-color: #ffffff;
+  --fixed-tags-text-muted: #adb5bd;
+
+  /* Navbar (Secondary Tag Menu Bar) */
+  --navbar-bg: #2a2a2a;
+  --navbar-text-color: #e0e0e0;
+  --navbar-text-muted: #adb5bd;
+
+  /* Cards */
+  --card-bg: #ffffff;
+  --card-text-color: #212529;
+  --card-border: #dee2e6;
+  --card-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1);
+  --link-color: #0066cc;
+  --link-hover-color: #0052a3;
+
+  /* Fixed Tags (Primary Tags) */
+  --hover-bg: #1a1a1a;
+  --active-tag-bg: #0066cc;
+  --active-tag-color: #ffffff;
+
+  /* Secondary Tags (Tag Menu) - Slightly lighter than navbar */
+  --secondary-tag-bg: #2a2a2a;
+  --secondary-tag-text-color: #e0e0e0;
+  --secondary-tag-hover-bg: #3a3a3a;
+  --secondary-tag-active-bg: #0066cc;
+  --secondary-tag-active-color: #ffffff;
+
+  /* Action Buttons (Add & Settings) */
+  --action-btn-bg: transparent;
+  --action-btn-text-color: #ffffff;
+  --action-btn-hover-bg: #1a1a1a;
+  --action-btn-hover-color: #ffffff;
+
+  /* Modals */
+  --modal-bg: #ffffff;
+  --modal-header-bg: #f8f9fa;
+  --modal-text-color: #212529;
+
+  /* Buttons & UI */
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --border-color: #dee2e6;
+  --text-muted: #6c757d;
+}
+
+/* Apply theme variables to elements */
+body {
+  background-color: var(--bg-color);
+  color: var(--card-text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Navbar */
+.navbar,
+.navbar-light {
+  background-color: var(--navbar-bg) !important;
+  color: var(--navbar-text-color);
+  transition: background-color 0.3s ease;
+}
+
+.navbar .nav-link {
+  color: var(--navbar-text-color) !important;
+}
+
+/* Fixed tags bar */
+.fixed-tags-bar {
+  background-color: var(--fixed-tags-bg);
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.fixed-tags-bar .nav-link {
+  color: var(--fixed-tags-text-color);
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.fixed-tags-bar .nav-link:hover {
+  background-color: var(--hover-bg) !important;
+}
+
+.fixed-tags-bar .nav-link.active {
+  background-color: var(--active-tag-bg);
+  color: var(--active-tag-color);
+}
+
+.fixed-tags-bar .nav-link.active:hover {
+  background-color: var(--active-tag-bg) !important;
+  color: var(--active-tag-color);
+}
+
+/* Action Buttons (Add & Settings) */
+#addSiteButtonContainer .nav-link {
+  background-color: var(--action-btn-bg) !important;
+}
+
+#addSiteButtonContainer .nav-link:hover,
+#addSiteButtonContainer .nav-link:focus {
+  background-color: var(--action-btn-hover-bg) !important;
+}
+
+#addSiteButtonContainer .fa-plus {
+  color: var(--action-btn-text-color);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+#addSiteButtonContainer .fa-plus:hover {
+  color: var(--action-btn-hover-color);
+}
+
+#settingsMenuContainer .nav-link {
+  background-color: var(--action-btn-bg) !important;
+}
+
+#settingsMenuContainer .nav-link:hover,
+#settingsMenuContainer .nav-link:focus {
+  background-color: var(--action-btn-hover-bg) !important;
+}
+
+#settingsMenuContainer .fa-cog {
+  color: var(--action-btn-text-color);
+  transition: color 0.3s ease;
+}
+
+#settingsMenuContainer .fa-cog:hover {
+  color: var(--action-btn-hover-color);
+}
+
+/* Secondary Tags (Tag Menu) */
+#tagMenu .tag.nav-link {
+  background-color: var(--secondary-tag-bg);
+  color: var(--secondary-tag-text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#tagMenu .tag.nav-link:hover {
+  background-color: var(--secondary-tag-hover-bg);
+  color: var(--secondary-tag-text-color);
+}
+
+#tagMenu .tag.nav-link.active {
+  background-color: var(--secondary-tag-active-bg);
+  color: var(--secondary-tag-active-color);
+}
+
+#tagMenu .tag.nav-link.active:hover {
+  background-color: var(--secondary-tag-active-bg);
+  color: var(--secondary-tag-active-color);
+}
+
+/* Tag menu (legacy rules kept for compatibility) */
+.tag.nav-link.active {
+  background-color: var(--active-tag-bg);
+  color: var(--active-tag-color);
+}
+
+.tag.nav-link {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Cards */
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  color: var(--card-text-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-body {
+  background-color: var(--card-bg);
+  color: var(--card-text-color);
+}
+
+.card-title,
+.card-title a {
+  color: var(--link-color);
+  transition: color 0.3s ease;
+}
+
+.card-title a:hover {
+  color: var(--link-hover-color);
+}
+
+.card-subtitle {
+  color: var(--text-muted) !important;
+}
+
+/* Links */
+a {
+  color: var(--link-color);
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--link-hover-color);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--link-hover-color);
+  border-color: var(--link-hover-color);
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+/* Modals */
+.modal-content {
+  background-color: var(--modal-bg);
+  color: var(--modal-text-color);
+  border-color: var(--border-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.modal-header {
+  background-color: var(--modal-header-bg);
+  color: var(--modal-text-color);
+  border-bottom-color: var(--border-color);
+  transition: background-color 0.3s ease;
+}
+
+.modal-body {
+  color: var(--modal-text-color);
+}
+
+.modal-footer {
+  border-top-color: var(--border-color);
+}
+
+/* Forms */
+.form-control {
+  background-color: var(--card-bg);
+  color: var(--card-text-color);
+  border-color: var(--border-color);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.form-control:focus {
+  background-color: var(--card-bg);
+  color: var(--card-text-color);
+  border-color: var(--primary-color);
+}
+
+textarea.form-control {
+  background-color: var(--card-bg);
+  color: var(--card-text-color);
+}
+
+/* Search input */
+#searchInput {
+  background-color: var(--card-bg);
+  color: var(--card-text-color);
+  border-color: var(--border-color);
+}
+
+#searchInput::placeholder {
+  color: var(--text-muted);
+}
+
+/* Text muted */
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+/* Borders */
+.border,
+.border-top,
+.border-bottom,
+.border-left,
+.border-right {
+  border-color: var(--border-color) !important;
+}
+
+/* Code blocks */
+code,
+pre {
+  background-color: var(--hover-bg);
+  color: var(--card-text-color);
+  border: 1px solid var(--border-color);
+}
+
+/* Badges */
+.badge-secondary {
+  background-color: var(--secondary-color);
+}
+
+/* Close button */
+.close {
+  color: var(--modal-text-color);
+  opacity: 0.7;
+}
+
+.close:hover {
+  color: var(--modal-text-color);
+  opacity: 1;
+}
+
+/* Theme selector button */
+#themeButton {
+  position: relative;
+}
+
+#themeButton i {
+  transition: transform 0.3s ease;
+}
+
+#themeButton:hover i {
+  transform: rotate(180deg);
+}
