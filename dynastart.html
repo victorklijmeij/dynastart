@@ -3,20 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tag-Based Navigation</title>
-  <!-- Favicon with letter D -->
+
+  <!-- Cache Control - Prevent browser caching -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <title>DynaStart</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Theme Color for PWA -->
+  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f5f5">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000">
+
+  <!-- iOS Safari PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="DynaStart">
+
+  <!-- iOS Safari Icons -->
+  <link rel="apple-touch-icon" href="icons/icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="icons/icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192x192.png">
+
+  <!-- Standard Favicons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512x512.png">
+
+  <!-- Fallback Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9IiMzMzgiLz4KICA8dGV4dCB4PSI1IiB5PSIxNiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE1IiBmaWxsPSJ3aGl0ZSI+RDwvdGV4dD4KPC9zdmc+">
+
+  <!-- Description for search engines and PWA -->
+  <meta name="description" content="DynaStart - A portable startpage application for organizing links and bookmarks">
+  <meta name="author" content="DynaStart">
+  <!-- Load initial data -->
   <script src="data/metadata.js"></script>
   <script src="data/hyperlinks.js"></script>
+  <!-- Include fontawesome CSS -->
+  <link rel="stylesheet" href="css/all.min.css">
   <!-- Include Bootstrap CSS -->
-  <link rel="stylesheet" href="css/all.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="css/bootstrap.min.css">
+  <!-- Include Dynastart CSS -->
   <link rel="stylesheet" href="css/dynastart.css">
+  <!-- Include Theme CSS -->
+  <link rel="stylesheet" href="css/theme.css">
   <!-- Optional: Include jQuery and Bootstrap Bundle JS (includes Popper.js for tooltips & popovers) -->
   <script src="js/jquery-3.5.1.slim.min.js"></script>
   <script src="js/bootstrap.bundle.min.js"></script>
   <!-- Include Bootstrap Bundle JS (includes Popper.js for tooltips & popovers) -->
+  <script src="js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <!-- Fixed Tags Bar -->
@@ -24,10 +63,26 @@
         <ul class="nav" id="fixedTagMenu">
             <!-- Fixed tag items will be inserted here using JavaScript -->
             <li class="nav-item" id="addSiteButtonContainer">
-                <button class="btn btn-primary" id="addSiteButton">Add</button>
+                <a class="nav-link" href="#" id="addSiteButton">
+                    <i class="fas fa-plus"></i>
+                </a>
             </li>
-            <li class="nav-item" id="exportLinksButtonContainer" style="display: none;">
-                <button class="btn btn-secondary" id="exportLinksButton" data-toggle="modal" data-target="#exportModal">Export!</button>
+            <li class="nav-item dropdown" id="settingsMenuContainer">
+                <a class="nav-link dropdown-toggle" href="#" id="settingsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-cog rotating-gear" id="settingsGear"></i>
+                    <span class="notification-badge" id="exportNotification" style="display: none;">!</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="settingsDropdown">
+                    <a class="dropdown-item" href="#" id="themeButton" data-toggle="modal" data-target="#themeModal">
+                        <i class="fas fa-palette"></i> Theme Settings
+                    </a>
+                    <a class="dropdown-item" href="#" id="viewCssOverridesButton" data-toggle="modal" data-target="#cssOverridesModal">
+                        <i class="fas fa-code"></i> View CSS Overrides
+                    </a>
+                    <a class="dropdown-item" href="#" id="exportLinksButton" data-toggle="modal" data-target="#exportModal">
+                        <i class="fas fa-save"></i> Save Data<span class="save-notification" id="saveNotification" style="display: none;"> !</span>
+                    </a>
+                </div>
             </li>
         </ul>
     </div>
@@ -42,12 +97,9 @@
     </nav>
         
     <!-- Search Bar -->
-    <div class="container mt-2">
+    <div class="container" id="searchContainer" style="position: relative;">
         <input type="search" id="searchInput" class="form-control py-2 rounded-pill mr-1 pr-5" placeholder="Search: type to search title and body, '!title' for title only, '#tooltip' for tooltip only, '>external' for external search">
-    </div>
-    <!-- RSS Feed Search Bar, visible when a feed is displayed -->
-    <div class="container mt-2" id="feedSearchContainer" style="display: none;">
-        <input type="search" id="feedSearchInput" class="form-control py-2 rounded-pill mr-1 pr-5" placeholder="Search in feed">
+        <div id="lastCharIndicator"></div>
     </div>
     <!-- Main content area for displaying links -->
     <div class="container mt-5" id="linksContainer">
@@ -91,8 +143,8 @@
               <label class="form-check-label" for="siteOpenInTab">Open in new tab</label>
             </div>
             <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="siteRssFeed">
-              <label class="form-check-label" for="siteRssFeed">RSS Feed</label>
+              <input type="checkbox" class="form-check-input" id="siteDisplayFull">
+              <label class="form-check-label" for="siteDisplayFull">Display full content (don't limit to 5 lines)</label>
             </div>
           </form>
         </div>
@@ -105,8 +157,8 @@
   </div>
 
   <!-- Edit Modal -->
-  <div class="modal fade" id="editSiteModal" tabindex="-1" aria-labelledby="editSiteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+  <div class="modal fade" id="editSiteModal" tabindex="-1" aria-labelledby="editSiteModalLabel" aria-hidden="true" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="editSiteModalLabel">Edit Site</h5>
@@ -141,8 +193,8 @@
               <label class="form-check-label" for="editSiteOpenInTab">Open in new tab</label>
             </div>
             <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="editSiteRssFeed">
-              <label class="form-check-label" for="editSiteRssFeed">RSS Feed</label>
+              <input type="checkbox" class="form-check-input" id="editSiteDisplayFull">
+              <label class="form-check-label" for="editSiteDisplayFull">Display full content (don't limit to 5 lines)</label>
             </div>
             <div class="form-group">
               <label for="editSiteUid">UID</label>
@@ -176,6 +228,463 @@
       </div>
     </div>
   </div>
+
+  <!-- CSS Overrides Modal -->
+  <div class="modal fade" id="cssOverridesModal" tabindex="-1" aria-labelledby="cssOverridesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cssOverridesModalLabel">Current CSS Overrides</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted mb-3">CSS custom properties currently applied to the page:</p>
+          <div id="cssOverridesContent" style="font-family: monospace; font-size: 0.9em;">
+            <!-- CSS overrides will be inserted here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="copyCssOverridesButton">Copy to Clipboard</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Screen Card Modal -->
+  <div class="modal fade" id="fullScreenCardModal" tabindex="-1" aria-labelledby="fullScreenCardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="fullScreenCardModalLabel">Card Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="fullScreenCardContent">
+            <!-- Card content will be inserted here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="d-flex justify-content-between align-items-center w-100">
+            <div id="fullScreenNavigation" class="d-flex align-items-center">
+              <!-- Navigation arrows and counter will be inserted here -->
+            </div>
+            <div>
+              <button type="button" class="btn btn-primary mr-2" id="fullScreenEditCardButton">Edit card</button>
+              <button type="button" class="btn btn-primary" id="fullScreenEditTextButton">Edit Text</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Text Editor Modal -->
+  <div class="modal fade" id="textEditorModal" tabindex="-1" aria-labelledby="textEditorModalLabel" aria-hidden="true" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="textEditorModalLabel">Edit Additional Text</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <textarea id="textEditorTextarea" class="form-control"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="saveTextEditorButton">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme Configuration Modal -->
+  <div class="modal fade" id="themeModal" tabindex="-1" aria-labelledby="themeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="themeModalLabel">Theme Settings</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label><strong>Predefined Themes</strong></label>
+            <div class="row" id="themePresets">
+              <!-- Theme preset buttons will be inserted here -->
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="form-group">
+            <label><strong>Custom Theme Colors</strong></label>
+            <p class="text-muted small">Customize individual colors or use a preset above</p>
+          </div>
+
+          <!-- General Section -->
+          <h6 class="mt-3 mb-3"><strong>General</strong></h6>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="bgColor">Background Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="bgColor" title="Background Color">
+                  <input type="text" class="form-control" id="bgColorText" placeholder="#ffffff">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation Section -->
+          <h6 class="mt-4 mb-3"><strong>Navigation</strong></h6>
+
+          <!-- Primary Navigation -->
+          <h6 class="mt-3 mb-2 ml-3" style="font-size: 0.95rem;"><strong>Primary Navigation</strong></h6>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="fixedTagsBg">Background</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="fixedTagsBg" title="Primary Navigation Background">
+                  <input type="text" class="form-control" id="fixedTagsBgText" placeholder="#000000">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="fixedTagsTextColor">Text Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="fixedTagsTextColor" title="Primary Navigation Text Color">
+                  <input type="text" class="form-control" id="fixedTagsTextColorText" placeholder="#ffffff">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="fixedTagsTextMuted">Text Muted</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="fixedTagsTextMuted" title="Primary Navigation Text Muted">
+                  <input type="text" class="form-control" id="fixedTagsTextMutedText" placeholder="#adb5bd">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="navSeparatorColor">Separator Line Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="navSeparatorColor" title="Navigation Separator Line Color">
+                  <input type="text" class="form-control" id="navSeparatorColorText" placeholder="#b8860b">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Secondary Navigation -->
+          <h6 class="mt-3 mb-2 ml-3" style="font-size: 0.95rem;"><strong>Secondary Navigation</strong></h6>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="navbarBg">Background</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="navbarBg" title="Secondary Navigation Background">
+                  <input type="text" class="form-control" id="navbarBgText" placeholder="#2a2a2a">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="navbarTextColor">Text Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="navbarTextColor" title="Secondary Navigation Text Color">
+                  <input type="text" class="form-control" id="navbarTextColorText" placeholder="#e0e0e0">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="navbarTextMuted">Text Muted</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="navbarTextMuted" title="Secondary Navigation Text Muted">
+                  <input type="text" class="form-control" id="navbarTextMutedText" placeholder="#adb5bd">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cards Section -->
+          <h6 class="mt-3 mb-3"><strong>Cards</strong></h6>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="cardBg">Card Background</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="cardBg" title="Card Background">
+                  <input type="text" class="form-control" id="cardBgText" placeholder="#ffffff">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="cardTextColor">Card Text Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="cardTextColor" title="Card Text Color">
+                  <input type="text" class="form-control" id="cardTextColorText" placeholder="#212529">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="cardBorder">Card Border Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="cardBorder" title="Card Border Color">
+                  <input type="text" class="form-control" id="cardBorderText" placeholder="#dee2e6">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="linkColor">Link Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="linkColor" title="Link Color">
+                  <input type="text" class="form-control" id="linkColorText" placeholder="#007bff">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="linkHoverColor">Link Hover Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="linkHoverColor" title="Link Hover Color">
+                  <input type="text" class="form-control" id="linkHoverColorText" placeholder="#0056b3">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="cardShadow">Card Shadow</label>
+                <input type="text" class="form-control" id="cardShadowText" placeholder="0 0.25rem 0.5rem rgba(0,0,0,0.1)">
+                <small class="form-text text-muted">CSS box-shadow value</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Primary Navigation Tag States -->
+          <h6 class="mt-3 mb-2 ml-3" style="font-size: 0.95rem;"><strong>Primary Navigation - Tag States</strong></h6>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="hoverBg">Tag Hover Background</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="hoverBg" title="Primary Navigation Hover Background">
+                  <input type="text" class="form-control" id="hoverBgText" placeholder="#f8f9fa">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="activeTagBg">Active Tag Background</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="activeTagBg" title="Primary Navigation Active Background">
+                  <input type="text" class="form-control" id="activeTagBgText" placeholder="#007bff">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="activeTagColor">Active Tag Text Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="activeTagColor" title="Primary Navigation Active Text Color">
+                  <input type="text" class="form-control" id="activeTagColorText" placeholder="#ffffff">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Secondary Navigation Tag Colors -->
+          <h6 class="mt-3 mb-2 ml-3" style="font-size: 0.95rem;"><strong>Secondary Navigation - Tag Colors</strong></h6>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="secondaryTagBg">Background</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="secondaryTagBg" title="Secondary Navigation Tag Background">
+                  <input type="text" class="form-control" id="secondaryTagBgText" placeholder="#ffffff">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="secondaryTagTextColor">Text Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="secondaryTagTextColor" title="Secondary Navigation Tag Text Color">
+                  <input type="text" class="form-control" id="secondaryTagTextColorText" placeholder="#212529">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="secondaryTagHoverBg">Hover Background</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="secondaryTagHoverBg" title="Secondary Navigation Tag Hover Background">
+                  <input type="text" class="form-control" id="secondaryTagHoverBgText" placeholder="#e9ecef">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="secondaryTagActiveBg">Active Background</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="secondaryTagActiveBg" title="Secondary Navigation Tag Active Background">
+                  <input type="text" class="form-control" id="secondaryTagActiveBgText" placeholder="#28a745">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="secondaryTagActiveColor">Active Text Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="secondaryTagActiveColor" title="Secondary Navigation Tag Active Text Color">
+                  <input type="text" class="form-control" id="secondaryTagActiveColorText" placeholder="#ffffff">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <h6 class="mt-3 mb-2 ml-3" style="font-size: 0.95rem;"><strong>Action Buttons (Add & Settings)</strong></h6>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="actionBtnBg">Background</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="actionBtnBg" title="Action Button Background">
+                  <input type="text" class="form-control" id="actionBtnBgText" placeholder="transparent">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="actionBtnTextColor">Icon/Text Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="actionBtnTextColor" title="Action Button Text Color">
+                  <input type="text" class="form-control" id="actionBtnTextColorText" placeholder="#ffffff">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="actionBtnHoverBg">Hover Background</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="actionBtnHoverBg" title="Action Button Hover Background">
+                  <input type="text" class="form-control" id="actionBtnHoverBgText" placeholder="#333333">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="actionBtnHoverColor">Hover Icon/Text Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="actionBtnHoverColor" title="Action Button Hover Text Color">
+                  <input type="text" class="form-control" id="actionBtnHoverColorText" placeholder="#ffffff">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modals Section -->
+          <h6 class="mt-3 mb-3"><strong>Modals</strong></h6>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="modalBg">Modal Background</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="modalBg" title="Modal Background">
+                  <input type="text" class="form-control" id="modalBgText" placeholder="#ffffff">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="modalHeaderBg">Modal Header Background</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="modalHeaderBg" title="Modal Header Background">
+                  <input type="text" class="form-control" id="modalHeaderBgText" placeholder="#f8f9fa">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="modalTextColor">Modal Text Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="modalTextColor" title="Modal Text Color">
+                  <input type="text" class="form-control" id="modalTextColorText" placeholder="#212529">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons & UI Section -->
+          <h6 class="mt-3 mb-3"><strong>Buttons & UI</strong></h6>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="primaryColor">Primary Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="primaryColor" title="Primary Color">
+                  <input type="text" class="form-control" id="primaryColorText" placeholder="#007bff">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="secondaryColor">Secondary Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="secondaryColor" title="Secondary Color">
+                  <input type="text" class="form-control" id="secondaryColorText" placeholder="#6c757d">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="borderColor">Border Color</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="borderColor" title="Border Color">
+                  <input type="text" class="form-control" id="borderColorText" placeholder="#dee2e6">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="textMuted">Text Muted</label>
+                <div class="input-group">
+                  <input type="color" class="form-control" id="textMuted" title="Text Muted">
+                  <input type="text" class="form-control" id="textMutedText" placeholder="#6c757d">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="resetThemeButton">Reset to Default</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="saveThemeButton">Apply Theme</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Include highlight.js for code syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
   <script src="js/marked.umd.min.js"></script>
   <script>
